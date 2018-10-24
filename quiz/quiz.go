@@ -8,6 +8,9 @@ import (
 	"encoding/csv"
 	"log"
 	"strings"
+	"flag"
+	"runtime"
+	"path"
 )
 
 type Quiz struct {
@@ -23,8 +26,8 @@ func check( e error) {
 
 }
 
-func parseCSVFile() []Quiz {
-	csvFile, err := os.Open("c:/Users/israelg/Documents/go_learning/quiz/problems.csv")
+func parseCSVFile(filename string) []Quiz {
+	csvFile, err := os.Open(filename)
 	check(err)
 	reader := csv.NewReader(bufio.NewReader(csvFile))
 	var quiz []Quiz
@@ -61,8 +64,12 @@ func runTest(quiz []Quiz) int {
 }
 
 func main() {
+	_, filename, _, _ := runtime.Caller(0)
+	defaultFilePath := path.Join(path.Dir(filename), "problems.csv")
+	filenameFlag := flag.String("filename", defaultFilePath, "filename you would like to pass")
+	flag.Parse()
 	var quiz []Quiz
-	quiz = parseCSVFile()
+	quiz = parseCSVFile(*filenameFlag)
 	totalQuestion := len(quiz)
 	totalCorrect := runTest(quiz)
 	fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
