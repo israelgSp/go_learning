@@ -6,7 +6,6 @@ import (
 	"os"
 	"fmt"
 	"encoding/csv"
-	"log"
 	"strings"
 	"flag"
 	"runtime"
@@ -35,8 +34,8 @@ func parseCSVFile(filename string) []Quiz {
 		line, error := reader.Read()
 		if error == io.EOF {
 			break
-		} else if error != nil {
-			log.Fatal(error)
+		} else  {
+			check(error)
 		}
 		quiz = append(quiz, Quiz {
 			Question: line[0],
