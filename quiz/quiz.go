@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"encoding/csv"
 	"log"
+	"strings"
 )
 
 type Quiz struct {
@@ -42,21 +43,28 @@ func parseCSVFile() []Quiz {
 	return quiz
 }
 
-func runTest(quiz []Quiz)  (int, int) {
+func runTest(quiz []Quiz) int {
+	var totalCorrectAns int
 	reader := bufio.NewReader(os.Stdin)
 	for _, quesAns := range quiz {
 		question := quesAns.Question
 		answer := quesAns.Answer
-		fmt.Print(quesAns)
+		fmt.Print(question, ": ")
+		response,_ := reader.ReadString('\n')
+		response = strings.TrimSuffix(response, "\r\n")
+		if response == answer {
+			totalCorrectAns += 1
+		}
 	}
 
-
+	return totalCorrectAns
 }
 
 func main() {
 	var quiz []Quiz
 	quiz = parseCSVFile()
-
-
+	totalQuestion := len(quiz)
+	totalCorrect := runTest(quiz)
+	fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
 
 }
