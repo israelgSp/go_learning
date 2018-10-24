@@ -10,6 +10,7 @@ import (
 	"flag"
 	"runtime"
 	"path"
+	"time"
 )
 
 type Quiz struct {
@@ -62,7 +63,21 @@ func runTest(quiz []Quiz) int {
 	return totalCorrectAns
 }
 
-func main() {
+func main() { 
+	timer := time.NewTimer(5 * time.Second)
+	var timeExpired bool
+	timeExpired = false
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Please press enter to start quiz: ")
+	resp,_ := reader.ReadString('\n')
+	resp = strings.TrimSuffix(resp, "\n")
+	go func() {
+		if resp == string('\r') {
+			<-timer.C	
+		}
+		fmt.Println("time expired")
+		timeExpired = true
+	}()
 	_, filename, _, _ := runtime.Caller(0)
 	defaultFilePath := path.Join(path.Dir(filename), "problems.csv")
 	filenameFlag := flag.String("filename", defaultFilePath, "filename you would like to pass")
