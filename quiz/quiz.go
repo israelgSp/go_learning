@@ -46,8 +46,7 @@ func parseCSVFile(filename string) []Quiz {
 	return quiz
 }
 
-func runTest(quiz []Quiz) int {
-	var totalCorrectAns int
+func runTest(totalCorrectAns * int, quiz []Quiz) {
 	reader := bufio.NewReader(os.Stdin)
 	for _, quesAns := range quiz {
 		question := quesAns.Question
@@ -56,36 +55,34 @@ func runTest(quiz []Quiz) int {
 		response,_ := reader.ReadString('\n')
 		response = strings.TrimSuffix(response, "\r\n")
 		if response == answer {
-			totalCorrectAns += 1
+			*totalCorrectAns += 1
 		}
 	}
-
-	return totalCorrectAns
 }
 
 func main() { 
 	timer := time.NewTimer(5 * time.Second)
-	var timeExpired bool
-	timeExpired = false
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Please press enter to start quiz: ")
-	resp,_ := reader.ReadString('\n')
-	resp = strings.TrimSuffix(resp, "\n")
-	go func() {
-		if resp == string('\r') {
-			<-timer.C	
-		}
-		fmt.Println("time expired")
-		timeExpired = true
-	}()
 	_, filename, _, _ := runtime.Caller(0)
 	defaultFilePath := path.Join(path.Dir(filename), "problems.csv")
 	filenameFlag := flag.String("filename", defaultFilePath, "filename you would like to pass")
 	flag.Parse()
 	var quiz []Quiz
+	var totalCorrect int
 	quiz = parseCSVFile(*filenameFlag)
 	totalQuestion := len(quiz)
-	totalCorrect := runTest(quiz)
-	fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Please press enter to start quiz: ")
+	resp,_ := reader.ReadString('\n')
+	resp = strings.TrimSuffix(resp, "\n")
+	
+	go func() {
+		if resp == string('\r') {
+			<-timer.C	
+		}
+		fmt.Println("time expired")
+		fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
+	}()
+	
+	runTest(&totalCorrect, quiz)
 
 }
