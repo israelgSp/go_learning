@@ -65,6 +65,7 @@ func main() {
 	_, filename, _, _ := runtime.Caller(0)
 	defaultFilePath := path.Join(path.Dir(filename), "problems.csv")
 	filenameFlag := flag.String("filename", defaultFilePath, "filename you would like to pass")
+	timerFlag := flag.Int("timer", 30, "time for for timer in seconds")
 	flag.Parse()
 	var quiz []Quiz
 	var totalCorrect int
@@ -77,7 +78,7 @@ func main() {
 	resp = strings.TrimSuffix(resp, "\n")
 	
 	if resp == string('\r') {
-		timer := time.NewTimer(30 * time.Second).C
+		timer := time.NewTimer(time.Duration(*timerFlag) * time.Second).C
 		
 		go func() {
 			runTest(&totalCorrect, quiz)
