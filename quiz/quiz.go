@@ -55,7 +55,7 @@ func runTest(totalCorrectAns * int, quiz []Quiz) {
 		response,_ := reader.ReadString('\n')
 		response = strings.TrimSuffix(response, "\r\n")
 		response = strings.TrimSpace(response)
-		if response == answer {
+		if strings.EqualFold(response, answer) {
 			*totalCorrectAns += 1
 		}
 	}
@@ -92,7 +92,7 @@ func main() {
 				return
 			case <- testFinished:
 				fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
-				return 
+				return
 			}
 	
 		}
