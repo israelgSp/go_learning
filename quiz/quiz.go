@@ -71,22 +71,10 @@ func askQuestions(totalCorrectAns * int, quiz []Quiz) {
 	}
 }
 
-func main() { 
-	_, filename, _, _ := runtime.Caller(0)
-	defaultFilePath := path.Join(path.Dir(filename), "problems.csv")
-	filenameFlag := flag.String("filename", defaultFilePath, "filename you would like to pass")
-	timerFlag := flag.Int("timer", 30, "time for for timer in seconds")
-	shuffleFlag := flag.Bool("shuffle", false, "option to shuffle test")
-	flag.Parse()
-	var quiz []Quiz
+func runTest(timerFlag *int, quiz []Quiz) {
 	var totalCorrect int
-	testFinished := make(chan bool)
-	quiz = parseCSVFile(*filenameFlag)
-	if *shuffleFlag {
-		quiz = shuffleArray(quiz)
-	}
-	
 	totalQuestion := len(quiz)
+	testFinished := make(chan bool)
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Please press enter to start quiz: ")
 	resp,_ := reader.ReadString('\n')
@@ -114,5 +102,21 @@ func main() {
 		}
 	
 	}
+}
+
+func main() { 
+	_, filename, _, _ := runtime.Caller(0)
+	defaultFilePath := path.Join(path.Dir(filename), "problems.csv")
+	filenameFlag := flag.String("filename", defaultFilePath, "filename you would like to pass")
+	timerFlag := flag.Int("timer", 30, "time for for timer in seconds")
+	shuffleFlag := flag.Bool("shuffle", false, "option to shuffle test")
+	flag.Parse()
+	var quiz []Quiz
+	quiz = parseCSVFile(*filenameFlag)
+	if *shuffleFlag {
+		quiz = shuffleArray(quiz)
+	}
+
+	runTest(timerFlag, quiz)
 	
 }
