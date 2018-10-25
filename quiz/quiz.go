@@ -56,7 +56,7 @@ func parseCSVFile(filename string) []Quiz {
 	return quiz
 }
 
-func runTest(totalCorrectAns * int, quiz []Quiz) {
+func askQuestions(totalCorrectAns * int, quiz []Quiz) {
 	reader := bufio.NewReader(os.Stdin)
 	for _, quesAns := range quiz {
 		question := quesAns.Question
@@ -96,7 +96,7 @@ func main() {
 		timer := time.NewTimer(time.Duration(*timerFlag) * time.Second).C
 		
 		go func() {
-			runTest(&totalCorrect, quiz)
+			askQuestions(&totalCorrect, quiz)
 			testFinished <- true
 		}()
 		
