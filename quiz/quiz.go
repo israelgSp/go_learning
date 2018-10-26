@@ -27,6 +27,8 @@ func check( e error) {
 
 }
 
+//If shuffle flag is set, this is the method
+//that shuffles the quiz.
 func shuffleArray(quiz []Quiz) []Quiz{
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := len(quiz); i>0; i-- {
@@ -36,6 +38,8 @@ func shuffleArray(quiz []Quiz) []Quiz{
 	return quiz
 }
 
+//This method reads in the .csv file
+//and parses into an array of Quiz(es)
 func parseCSVFile(filename string) []Quiz {
 	csvFile, err := os.Open(filename)
 	check(err)
@@ -56,6 +60,8 @@ func parseCSVFile(filename string) []Quiz {
 	return quiz
 }
 
+//This method does the actual asking of the questions
+//and reads the input from the user
 func askQuestions(totalCorrectAns * int, quiz []Quiz) {
 	reader := bufio.NewReader(os.Stdin)
 	for _, quesAns := range quiz {
