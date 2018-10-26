@@ -19,12 +19,12 @@ type Quiz struct {
 
 }
 
+type errorString struct {
+	s string
+}
 
-func check( e error) {
-	if e != nil {
-		panic(e)
-	}
-
+func (e *errorString) Error() string {
+	return e.s
 }
 
 //If shuffle flag is set, this is the method
@@ -41,22 +41,24 @@ func shuffleQuiz(quiz []Quiz) []Quiz{
 //This method reads in the .csv file
 //and parses into an array of Quiz(es)
 func parseCSVFile(filename string) (error, []Quiz) {
-	csvFile, err := os.Open(filename)
-	check(err)
-	reader := csv.NewReader(bufio.NewReader(csvFile))
-	var quiz []Quiz
-	var e error
-	for {
-		line, e := reader.Read()
-		if e == io.EOF {
-			break
+	csvFile, e := os.Open(filename)
+	if e != nil {
+		return e, nil
+	} else {
+		reader := csv.NewReader(bufio.NewReader(csvFile))
+		var quiz []Quiz
+		for {
+			line, e := reader.Read()
+			if e == io.EOF {
+				break
+			}
+			quiz = append(quiz, Quiz {
+				Question: line[0],
+				Answer: line[1],
+			})
 		}
-		quiz = append(quiz, Quiz {
-			Question: line[0],
-			Answer: line[1],
-		})
-	}
-	return e, quiz
+		return e, quiz
+		}
 }
 
 //This method does the actual asking of the questions
@@ -121,9 +123,11 @@ func main() {
 	var quiz []Quiz
 	var e error
 	e, quiz = parseCSVFile(*filenameFlag)
+	fmt.Println(e.Error())
 	if e != nil {
 		panic(e)
 	}else if *shuffleFlag {
+		fmt.Println("ad;lsfkj;lasdfdlasfklj")
 		quiz = shuffleQuiz(quiz)
 	}
 
