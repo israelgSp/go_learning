@@ -123,11 +123,12 @@ func main() {
 	var quiz []Quiz
 	var e error
 	e, quiz = parseCSVFile(*filenameFlag)
-	fmt.Println(e.Error())
+
 	if e != nil {
 		panic(e)
-	}else if *shuffleFlag {
-		fmt.Println("ad;lsfkj;lasdfdlasfklj")
+	}
+	
+	if *shuffleFlag {
 		quiz = shuffleQuiz(quiz)
 	}
 
