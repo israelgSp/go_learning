@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"path"
 	"runtime"
+	"fmt"
 )
 
 //Test shuffle quiz method
@@ -44,9 +45,16 @@ func TestParseCSVFile(t *testing.T) {
 	sizeOfExpectedArray := 12
 	_, filename, _, _ := runtime.Caller(0)
 	file := path.Join(path.Dir(filename), "problems.csv")
-	quiz := parseCSVFile(file)
+
+	_, quiz := parseCSVFile(file)
 	if len(quiz) != sizeOfExpectedArray {
 		t.Errorf("Size mismatch")
 	}
 
+	notRealFile := "not real file"
+	e,_ := parseCSVFile(notRealFile)
+
+	if e.Error() != fmt.Sprintf("open %s: The system cannot find the file specified.", notRealFile) {
+		t.Errorf("Expected 'The system cannot find the file specified' error")
+	}
 }
