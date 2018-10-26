@@ -3,6 +3,8 @@ package main
 import (
 	"testing"
 	"reflect"
+	"path"
+	"runtime"
 )
 
 //Test shuffle quiz method
@@ -39,5 +41,12 @@ func TestShuffle(t *testing.T) {
 }
 
 func TestParseCSVFile(t *testing.T) {
-	
+	sizeOfExpectedArray := 12
+	_, filename, _, _ := runtime.Caller(0)
+	file := path.Join(path.Dir(filename), "problems.csv")
+	quiz := parseCSVFile(file)
+	if len(quiz) != sizeOfExpectedArray {
+		t.Errorf("Size mismatch")
+	}
+
 }
