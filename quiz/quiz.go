@@ -79,7 +79,7 @@ func askQuestions(totalCorrectAns * int, quiz []Quiz) {
 
 //This the main method the runs the application.
 //This method has the timer functionality 
-func runTest(timerFlag *int, quiz []Quiz) {
+func runQuiz(timerFlag *int, quiz []Quiz) {
 	var totalCorrect int
 	totalQuestion := len(quiz)
 	testFinished := make(chan bool)
@@ -125,6 +125,6 @@ func main() {
 		quiz = shuffleQuiz(quiz)
 	}
 
-	runTest(timerFlag, quiz)
+	runQuiz(timerFlag, quiz)
 	
 }
