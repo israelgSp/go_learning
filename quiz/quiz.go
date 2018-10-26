@@ -29,7 +29,7 @@ func check( e error) {
 
 //If shuffle flag is set, this is the method
 //that shuffles the quiz.
-func shuffleArray(quiz []Quiz) []Quiz{
+func shuffleQuiz(quiz []Quiz) []Quiz{
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := len(quiz); i>0; i-- {
 		j := r.Intn(i)
@@ -77,6 +77,8 @@ func askQuestions(totalCorrectAns * int, quiz []Quiz) {
 	}
 }
 
+//This the main method the runs the application.
+//This method has the timer functionality 
 func runTest(timerFlag *int, quiz []Quiz) {
 	var totalCorrect int
 	totalQuestion := len(quiz)
@@ -120,7 +122,7 @@ func main() {
 	var quiz []Quiz
 	quiz = parseCSVFile(*filenameFlag)
 	if *shuffleFlag {
-		quiz = shuffleArray(quiz)
+		quiz = shuffleQuiz(quiz)
 	}
 
 	runTest(timerFlag, quiz)
