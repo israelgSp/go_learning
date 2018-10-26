@@ -40,24 +40,23 @@ func shuffleQuiz(quiz []Quiz) []Quiz{
 
 //This method reads in the .csv file
 //and parses into an array of Quiz(es)
-func parseCSVFile(filename string) []Quiz {
+func parseCSVFile(filename string) (error, []Quiz) {
 	csvFile, err := os.Open(filename)
 	check(err)
 	reader := csv.NewReader(bufio.NewReader(csvFile))
 	var quiz []Quiz
+	var e error
 	for {
-		line, error := reader.Read()
-		if error == io.EOF {
+		line, e := reader.Read()
+		if e == io.EOF {
 			break
-		} else  {
-			check(error)
 		}
 		quiz = append(quiz, Quiz {
 			Question: line[0],
 			Answer: line[1],
 		})
 	}
-	return quiz
+	return e, quiz
 }
 
 //This method does the actual asking of the questions
@@ -120,8 +119,11 @@ func main() {
 	shuffleFlag := flag.Bool("shuffle", false, "option to shuffle test")
 	flag.Parse()
 	var quiz []Quiz
-	quiz = parseCSVFile(*filenameFlag)
-	if *shuffleFlag {
+	var e error
+	e, quiz = parseCSVFile(*filenameFlag)
+	if e != nil {
+		panic(e)
+	}else if *shuffleFlag {
 		quiz = shuffleQuiz(quiz)
 	}
 
