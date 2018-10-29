@@ -82,7 +82,7 @@ func askQuestions(totalCorrectAns * int, quiz []Quiz) {
 
 //This the main method the runs the application.
 //This method has the timer functionality 
-func runQuiz(timerFlag *int, quiz []Quiz) (int, int) {
+func runQuiz(timerFlag *int, quiz []Quiz) {
 	var totalCorrect int
 	totalQuestion := len(quiz)
 	testFinished := make(chan bool)
@@ -103,16 +103,16 @@ func runQuiz(timerFlag *int, quiz []Quiz) (int, int) {
 			select {
 			case <- timer:
 				fmt.Println("time expired")
-				break
+				fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
+				return
 			case <- testFinished:
-				break
+				fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
+				return
 			}
-			break
 	
 		}
 	
 	}
-	return totalCorrect, totalQuestion
 }
 
 func main() { 
@@ -134,6 +134,6 @@ func main() {
 		quiz = shuffleQuiz(quiz)
 	}
 
-	totalCorrect, totalQuestion := runQuiz(timerFlag, quiz)
-	fmt.Printf("Total correct answers %v out of %v total questions\n", totalCorrect, totalQuestion)
+	runQuiz(timerFlag, quiz)
+	
 }
