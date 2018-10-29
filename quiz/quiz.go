@@ -65,13 +65,18 @@ func parseCSVFile(filename string) (error, []Quiz) {
 
 //This method does the actual asking of the questions
 //and reads the input from the user
-func askQuestions(totalCorrectAns * int, quiz []Quiz) {
-	reader := bufio.NewReader(os.Stdin)
+func askQuestions(in *os.File, totalCorrectAns * int, quiz []Quiz) {
+	var response string
+
+	if in == nil {
+		in = os.Stdin
+	}
+	
 	for _, quesAns := range quiz {
 		question := quesAns.Question
 		answer := quesAns.Answer
 		fmt.Print(question, ": ")
-		response,_ := reader.ReadString('\n')
+		fmt.Fscan(in, &response)
 		response = strings.TrimSuffix(response, "\r\n")
 		response = strings.TrimSpace(response)
 		if strings.EqualFold(response, answer) {
@@ -95,7 +100,7 @@ func runQuiz(timerFlag *int, quiz []Quiz) {
 		timer := time.NewTimer(time.Duration(*timerFlag) * time.Second).C
 		
 		go func() {
-			askQuestions(&totalCorrect, quiz)
+			askQuestions(nil, &totalCorrect, quiz)
 			testFinished <- true
 		}()
 		
