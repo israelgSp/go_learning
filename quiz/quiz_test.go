@@ -70,4 +70,11 @@ func TestParseCSVFileCorrectErrorIfFileDoesNOTExits(t *testing.T) {
 	if e.Error() != fmt.Sprintf("open %s: The system cannot find the file specified.", notRealFile) {
 		t.Errorf("Expected 'The system cannot find the file specified' error")
 	}
+
+	notRealFile1 := "randoms.csv"
+	e1,_ := parseCSVFile(notRealFile1)
+
+	if e1.Error() != fmt.Sprintf("open %s: The system cannot find the file specified.", notRealFile1) {
+		t.Errorf("Expected 'The system cannot find the file specified' error")
+	}
 }
