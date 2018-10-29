@@ -51,14 +51,16 @@ func parseCSVFile(filename string) (error, []Quiz) {
 			line, e := reader.Read()
 			if e == io.EOF {
 				break
+			} else if e != nil {
+				return e, nil
 			}
 			quiz = append(quiz, Quiz {
 				Question: line[0],
 				Answer: line[1],
 			})
 		}
-		return e, quiz
-		}
+		return nil, quiz	
+	}
 }
 
 //This method does the actual asking of the questions
