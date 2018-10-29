@@ -51,6 +51,15 @@ func TestParseCSVFileParsesFileCorrectly(t *testing.T) {
 	if len(quiz) != sizeOfExpectedArray {
 		t.Errorf("Size mismatch")
 	}
+
+	sizeOfExpectedArray1 := 5
+	_, filename1, _, _ := runtime.Caller(0)
+	file1 := path.Join(path.Dir(filename1), "random.csv")
+
+	_, quiz1 := parseCSVFile(file1)
+	if len(quiz1) != sizeOfExpectedArray1 {
+		t.Errorf("Size mismatch")
+	}
 }
 
 //Test if method handles not having an existing file correctly
