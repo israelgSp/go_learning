@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-//Test shuffle quiz method
+//Test shuffle quiz method. Test to see if file is shuffled correctly
 func TestShuffle(t *testing.T) {
 	quiz := []Quiz{
 		{"5+5","10"},
@@ -41,8 +41,8 @@ func TestShuffle(t *testing.T) {
 
 }
 
-//Testing parseCSVFile method
-func TestParseCSVFile(t *testing.T) {
+//Test if method parses csv file correctly
+func TestParseCSVFileParsesFileCorrectly(t *testing.T) {
 	sizeOfExpectedArray := 12
 	_, filename, _, _ := runtime.Caller(0)
 	file := path.Join(path.Dir(filename), "problems.csv")
@@ -51,7 +51,10 @@ func TestParseCSVFile(t *testing.T) {
 	if len(quiz) != sizeOfExpectedArray {
 		t.Errorf("Size mismatch")
 	}
+}
 
+//Test if method handles not having an existing file correctly
+func TestParseCSVFileCorrectErrorIfFileDoesNOTExits(t *testing.T) {
 	notRealFile := "not real file"
 	e,_ := parseCSVFile(notRealFile)
 
