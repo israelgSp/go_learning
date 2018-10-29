@@ -6,6 +6,9 @@ import (
 	"path"
 	"runtime"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
 )
 
 //Test shuffle quiz method. Test to see if file is shuffled correctly
@@ -76,5 +79,92 @@ func TestParseCSVFileCorrectErrorIfFileDoesNOTExits(t *testing.T) {
 
 	if e1.Error() != fmt.Sprintf("open %s: The system cannot find the file specified.", notRealFile1) {
 		t.Errorf("Expected 'The system cannot find the file specified' error")
+	}
+}
+
+//Testing askQuestions method to see if method calculates correct answers correctly.
+func TestAskQuestionsCalculatesAnswersCorrectly(t *testing.T) {
+	var totalCorrectCalculated int
+	totalCorrect := 5
+	//user input setup
+	in, err := ioutil.TempFile("", "")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer in.Close()
+	
+	//user input to test. All correct
+	_, err = io.WriteString(in, "10\n2\n11\n3\n14\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = in.Seek(0, os.SEEK_SET)
+
+	quiz := []Quiz{
+		{"5+5","10"},
+		{"1+1","2"},
+		{"8+3","11"},
+		{"1+2","3"},
+		{"8+6","14"},
+	}
+	
+	askQuestions(in, &totalCorrectCalculated, quiz)
+
+	if totalCorrectCalculated != totalCorrect {
+		t.Errorf("Correct answers were not calcuated properly")
+	}
+
+	//user input to test with 4 correct answers
+
+	in, err = ioutil.TempFile("", "")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer in.Close()
+
+	_, err = io.WriteString(in, "10\n2\n11\n3\n1\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = in.Seek(0, os.SEEK_SET)
+
+	totalCorrect = 4
+	totalCorrectCalculated = 0
+
+
+	askQuestions(in, &totalCorrectCalculated, quiz)
+
+	if totalCorrectCalculated != totalCorrect {
+		t.Errorf("Correct answers were not calcuated properly")
+	}
+
+	//user input to test with an invalid answer 4 correct answers
+
+	in, err = ioutil.TempFile("", "")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer in.Close()
+
+	_, err = io.WriteString(in, "10\n2\n11\nrandom\n14\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = in.Seek(0, os.SEEK_SET)
+
+	totalCorrect = 4
+	totalCorrectCalculated = 0
+
+
+	askQuestions(in, &totalCorrectCalculated, quiz)
+
+	if totalCorrectCalculated != totalCorrect {
+		t.Errorf("Correct answers were not calcuated properly")
 	}
 }
