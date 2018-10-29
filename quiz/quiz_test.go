@@ -41,6 +41,7 @@ func TestShuffle(t *testing.T) {
 
 }
 
+//Testing parseCSVFile method
 func TestParseCSVFile(t *testing.T) {
 	sizeOfExpectedArray := 12
 	_, filename, _, _ := runtime.Caller(0)
